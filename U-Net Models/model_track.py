@@ -18,35 +18,6 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Dropout, UpSamp
 from tensorflow.keras.layers import Concatenate
 from tensorflow.keras.optimizers import Adam
 
-
-def pixelwise_weighted_binary_crossentropy(y_true, y_pred):
-    '''
-    This function calculates the pixel-wise weighted, binary cross-entropy value
-    between the prediction (y_pred) and the pixel-wise weight map, which is unstacked
-    from y_true. 
-    On the Gauss ssh server, tf.log must be written as tf.math.log
-    '''
-    try:
-        # The weights are passed as part of the y_true tensor:
-        [seg, weight] = tf.unstack(y_true, 2, axis=-1)
-
-        seg = tf.expand_dims(seg, -1)
-        weight = tf.expand_dims(weight, -1)
-    except:
-        pass
-
-    epsilon = tf.convert_to_tensor(K.epsilon(), y_pred.dtype.base_dtype)
-    y_pred = tf.clip_by_value(y_pred, epsilon, 1. - epsilon)
-    y_pred = tf.math.log(y_pred / (1 - y_pred))
-
-    zeros = array_ops.zeros_like(y_pred, dtype=y_pred.dtype)
-    cond = (y_pred >= zeros)
-    relu_logits = math_ops.select(cond, y_pred, zeros)
-    neg_abs_logits = math_ops.select(cond, -y_pred, y_pred)
-    entropy = math_ops.add(relu_logits - y_pred*seg, math_ops.log1p(math_ops.exp(neg_abs_logits)), name=None)
-    
-    # This is essentially the only part that is different from the Keras code:
-    return K.mean(math_ops.multiply(weight, entropy), axis=-1)
     
 def unstack_acc(y_true, y_pred):
     ''' 
@@ -65,9 +36,8 @@ def unstack_acc(y_true, y_pred):
 
 def class_weighted_categorical_crossentropy(class_weights):
     '''
-    This function returns a loss function. And that loss function is a 
-    class-weighted categorical cross-entropy, i.e. the loss associated with 
-    each class/category is weighted by weights in the class_weights list.
+    This function returns a loss function that calculates the class-weighted
+    cateogrical cross-entropy used to train the tracking U-Net
     '''
     def loss_function(y_true, y_pred):
         
@@ -88,7 +58,9 @@ def class_weighted_categorical_crossentropy(class_weights):
     return loss_function
 
 class CustomSaver(keras.callbacks.Callback):
-    """Define custom saver to save the model at the end of every epoch, with epoch number in name"""
+    '''
+    This custom saver saves the model at the end of every epoch, with epoch number in name
+    '''
     
     def on_epoch_end(self, epoch, logs={}):
         if epoch == 1:  # or save after some epoch, each k-th epoch etc.
@@ -96,9 +68,7 @@ class CustomSaver(keras.callbacks.Callback):
             
 def Define_unet(input_size = (1024,1024,1), final_activation = 'sigmoid', output_classes = 1):
     '''
-    Declares the U-Net model. Input size can be varied in new_main.py.
-    Generic U-Net declaration. Only the input size, final activation layer and 
-    dimensionality of the output vary between the different uses.
+    This function defines the tracking U-Net structure.
     '''
     
     inputs = Input(input_size,  name='true_input')	
