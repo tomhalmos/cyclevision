@@ -8,14 +8,13 @@ This Github contains the scripts and algorithms that were developed to implement
 
 Training a network requires model initialisation script (U-Net Models), the data.py processing script (Pipeline and Evaluation) and a training script (Training Scripts). To run the three correctly, place them along with the training data in the following folder environment:
 
---> **SegNet**
-
   --> **scripts**
   
     -> data.py
     -> model_seg.py
     -> train_seg.py
   --> **data**
+  
     -> img
     -> truth
 
