@@ -20,5 +20,5 @@ To train a network set up the following folder environment with the data process
     -> img
     -> truth
 
-Data importing functions can currently deal with a mixture of 1024x1024 Barr Lab images as well as 696x520 BBBC database images.  
+Data importing functions can currently deal with a mixture of 1024x1024 Barr Lab images as well as 696x520 BBBC database images. Images and their corresponding grouth truth masks must be saved with identical filenames in their respective folders. 
 To train the U-Net run the training script from its location in the scripts folder. 
