@@ -1,12 +1,14 @@
 # cyclevision
 Computer Vision for Cancer Cell Cycle Research
 
-This Github contains the scripts and algorithms that were developed to implement [Convolutional U-Nets](https://arxiv.org/pdf/1505.04597.pdf) for fully automatic image analysis in cancer cell cycle research. The work was modeled on the double U-Net analysis pipeline used in the [DeLTA](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007673) analysis framework. 
+This Github contains the scripts developed to implement [Convolutional U-Nets](https://arxiv.org/pdf/1505.04597.pdf) for automatic image analysis in cancer cell cycle research. The work was modeled on the [DeLTA](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007673) double U-Net analysis pipeline.
 
+## Python Packages 
+The python packages required to train the U-Nets can be installed from the YAML file in the Anaconda Packages folder.
 
 ## Train a Network
 
-Training a network requires model initialisation script (U-Net Models), the data.py processing script (Pipeline and Evaluation) and a training script (Training Scripts). To run the three correctly, place them along with the training data in the following folder environment:
+To train a network set up the following folder environment with the data processing, model architecture and training scripts in the correct location:
 
   --> **scripts**
   
@@ -18,4 +20,5 @@ Training a network requires model initialisation script (U-Net Models), the data
     -> img
     -> truth
 
-This can be customised by changing the path directories in the DataImport function in data.py. It should be noted that 
+Data importing functions can currently deal with a mixture of 1024x1024 Barr Lab images as well as 696x520 BBBC database images.  
+To train the U-Net run the training script from its location in the scripts folder. 
